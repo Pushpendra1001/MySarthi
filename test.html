@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Test Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        header {
+            background-color: #4a76fd;
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h1, h2 {
+            margin-top: 0;
+        }
+        .button {
+            background-color: #4a76fd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #3a66ed;
+        }
+        #bot-id-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 250px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .instructions {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-left: 4px solid #4a76fd;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI Chatbot Test Page</h1>
+    </header>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Test Your Chatbot</h2>
+            <div class="instructions">
+                <p><strong>Instructions:</strong></p>
+                <ol>
+                    <li>Make sure your server is running at <code>http://127.0.0.1:7864</code></li>
+                    <li>Enter your bot ID below (copy from the "My Chatbots" tab in your app)</li>
+                    <li>Click "Load Chatbot" to activate the chat widget</li>
+                </ol>
+            </div>
+            
+            <div>
+                <input type="text" id="bot-id-input" placeholder="Enter your bot ID here">
+                <button class="button" id="load-bot-btn">Load Chatbot</button>
+            </div>
+            
+            <div id="chatbot-container"></div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('load-bot-btn').addEventListener('click', function() {
+            const botId = document.getElementById('bot-id-input').value.trim();
+            if (!botId) {
+                alert('Please enter a bot ID');
+                return;
+            }
+            
+            // Clear any existing chatbot
+            document.getElementById('chatbot-container').innerHTML = '';
+            
+            // Add the chatbot code
+            const chatbotCode = `
+            <!-- AI Chatbot Widget -->
+            <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+                <!-- Chat Button -->
+                <div id="chat-button" style="background-color: #4a76fd; color: white; border-radius: 50%; width: 60px; height: 60px; 
+                                            display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"/>
+                    </svg>
+                </div>
+                
+                <!-- Chat Window (hidden by default) -->
+                <div id="chat-window" style="display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 450px; 
+                                            background-color: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+                                            overflow: hidden; flex-direction: column;">
+                    <!-- Header -->
+                    <div style="background-color: #4a76fd; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>AI Assistant</div>
+                        <div id="close-chat" style="cursor: pointer;">✖</div>
+                    </div>
+                    
+                    <!-- Messages Area -->
+                    <div id="chat-messages" style="flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column;"></div>
+                    
+                    <!-- Input Area -->
+                    <div style="padding: 15px; border-top: 1px solid #e0e0e0; display: flex;">
+                        <input id="chat-input" type="text" placeholder="Type your message..." 
+                            style="flex-grow: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 20px; margin-right: 10px;">
+                        <button id="send-button" style="background-color: #4a76fd; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11v-.001z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Chatbot functionality
+                (function() {
+                    // Elements
+                    const chatButton = document.getElementById('chat-button');
+                    const chatWindow = document.getElementById('chat-window');
+                    const closeChat = document.getElementById('close-chat');
+                    const chatMessages = document.getElementById('chat-messages');
+                    const chatInput = document.getElementById('chat-input');
+                    const sendButton = document.getElementById('send-button');
+                    
+                    // Bot configuration
+                    const botId = '${botId}';
+                  const botEndpoint = 'http://127.0.0.1:7865/bot/' + botId;
+                    
+                    // Chat history
+                    let messageHistory = [];
+                    
+                    // Toggle chat window
+                    chatButton.addEventListener('click', () => {
+                        chatWindow.style.display = 'flex';
+                        chatButton.style.display = 'none';
+                    });
+                    
+                    closeChat.addEventListener('click', () => {
+                        chatWindow.style.display = 'none';
+                        chatButton.style.display = 'flex';
+                    });
+                    
+                    // Add a message to the chat
+                    function addMessage(content, isUser) {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.style.alignSelf = isUser ? 'flex-end' : 'flex-start';
+                        messageDiv.style.maxWidth = '70%';
+                        messageDiv.style.marginBottom = '10px';
+                        
+                        const bubble = document.createElement('div');
+                        bubble.style.padding = '10px 15px';
+                        bubble.style.borderRadius = '18px';
+                        bubble.style.backgroundColor = isUser ? '#dcf8c6' : '#f1f0f0';
+                        bubble.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
+                        bubble.textContent = content;
+                        
+                        messageDiv.appendChild(bubble);
+                        chatMessages.appendChild(messageDiv);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        
+                        // Add to history
+                        if (isUser) {
+                            messageHistory.push({role: "user", content: content});
+                        } else {
+                            messageHistory.push({role: "assistant", content: content});
+                        }
+                    }
+                    
+                    // Send message
+                    function sendMessage() {
+                        const message = chatInput.value.trim();
+                        if (!message) return;
+                        
+                        // Add user message
+                        addMessage(message, true);
+                        chatInput.value = '';
+                        
+                        // Show typing indicator
+                        const typingDiv = document.createElement('div');
+                        typingDiv.style.alignSelf = 'flex-start';
+                        typingDiv.style.maxWidth = '70%';
+                        typingDiv.style.marginBottom = '10px';
+                        typingDiv.id = 'typing-indicator';
+                        
+                        const typingBubble = document.createElement('div');
+                        typingBubble.style.padding = '10px 15px';
+                        typingBubble.style.borderRadius = '18px';
+                        typingBubble.style.backgroundColor = '#f1f0f0';
+                        typingBubble.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
+                        typingBubble.textContent = 'Typing...';
+                        
+                        typingDiv.appendChild(typingBubble);
+                        chatMessages.appendChild(typingDiv);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        
+                        // Call the API
+                        fetch(botEndpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                message: message,
+                                history: messageHistory
+                            })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok: ' + response.status);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Remove typing indicator
+                            if (document.getElementById('typing-indicator')) {
+                                chatMessages.removeChild(document.getElementById('typing-indicator'));
+                            }
+                            
+                            // Add bot response
+                            if (data.response) {
+                                addMessage(data.response, false);
+                            } else if (data.error) {
+                                addMessage("Error: " + data.error, false);
+                            } else {
+                                addMessage("Received an empty response from the server.", false);
+                            }
+                            
+                            console.log('Success:', data);
+                        })
+                        .catch(error => {
+                            // Remove typing indicator
+                            if (document.getElementById('typing-indicator')) {
+                                chatMessages.removeChild(document.getElementById('typing-indicator'));
+                            }
+                            
+                            // Add error message
+                            addMessage("Sorry, there was an error connecting to the server: " + error.message, false);
+                            console.error('Error:', error);
+                        });
+                    }
+                    
+                    // Event listeners
+                    sendButton.addEventListener('click', sendMessage);
+                    chatInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') sendMessage();
+                    });
+                    
+                    // Test API connection
+                    fetch('http://127.0.0.1:7864/simplebot/' + botId)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('API connection test:', data);
+                            // Add initial message
+                            setTimeout(() => {
+                                addMessage("Hello! I'm your AI assistant. How can I help you today?", false);
+                            }, 500);
+                        })
+                        .catch(error => {
+                            console.error('API connection test failed:', error);
+                            addMessage("⚠️ Warning: Could not connect to the chatbot server. Please make sure the server is running.", false);
+                        });
+                })();
+            <\/script>
+            `;
+            
+            document.getElementById('chatbot-container').innerHTML = chatbotCode;
+            
+            // Execute the script
+            const scripts = document.getElementById('chatbot-container').getElementsByTagName('script');
+            for (let i = 0; i < scripts.length; i++) {
+                eval(scripts[i].innerHTML);
+            }
+        });
+    </script>
+</body>
+</html>
